@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
+#include <iostream>
+
 #include "stablehlo/dialect/Register.h"
 
 #include "mlir/Dialect/Func/IR/FuncOps.h"
@@ -35,6 +37,7 @@ void registerAllDialects(mlir::DialectRegistry &registry) {
   registry.insert<mlir::chlo::ChloDialect,
                   mlir::stablehlo::StablehloDialect,
                   mlir::vhlo::VhloDialect>();
+  std::cout << "Registered all dialects!\n";
   // clang-format on
 }
 
