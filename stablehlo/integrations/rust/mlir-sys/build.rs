@@ -7,7 +7,7 @@ use std::{
     str,
 };
 
-const LLVM_MAJOR_VERSION: usize = 17;
+const LLVM_MAJOR_VERSION: usize = 18;
 
 fn main() {
     if let Err(error) = run() {
@@ -112,9 +112,7 @@ fn get_system_libcpp() -> Option<&'static str> {
 }
 
 fn llvm_config(argument: &str) -> Result<String, Box<dyn Error>> {
-    let prefix = env::var(format!("MLIR_SYS_{}0_PREFIX", LLVM_MAJOR_VERSION))
-        .map(|path| Path::new(&path).join("bin"))
-        .unwrap_or_default();
+    let prefix = Path::new("../../../../llvm-install/bin");
     let call = format!(
         "{} --link-static {}",
         prefix.join("llvm-config").display(),
