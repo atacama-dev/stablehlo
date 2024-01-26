@@ -2,12 +2,13 @@
 name = "melior-test"
 version = "0.1.0"
 edition = "2021"
-buikd = "build.rs"
+build = "build.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-melior = { path = "../melior/melior", features = ["ods-dialects"] }
-tblgen = { version = "0.3.0", features = ["llvm17-0"], default-features = false }
+melior = { path = "../melior/melior" , features = ["ods-dialects"] }
+
+tblgen = { path = "../tblgen-rs", features = ["llvm18-0"] }
 mlir-sys = { path = "../mlir-sys" }
 stablehlo-sys = { path = "../stablehlo-sys" }

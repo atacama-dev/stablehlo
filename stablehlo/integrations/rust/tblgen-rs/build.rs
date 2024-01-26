@@ -8,8 +8,12 @@ use std::{
 
 #[cfg(feature = "llvm16-0")]
 const LLVM_MAJOR_VERSION: usize = 16;
+
 #[cfg(feature = "llvm17-0")]
 const LLVM_MAJOR_VERSION: usize = 17;
+
+#[cfg(feature = "llvm18-0")]
+const LLVM_MAJOR_VERSION: usize = 18;
 
 fn main() {
     if let Err(error) = run() {
@@ -117,9 +121,7 @@ fn get_system_libcpp() -> Option<&'static str> {
 }
 
 fn llvm_config(argument: &str) -> Result<String, Box<dyn Error>> {
-    let prefix = env::var(format!("TABLEGEN_{}0_PREFIX", LLVM_MAJOR_VERSION))
-        .map(|path| Path::new(&path).join("bin"))
-        .unwrap_or_default();
+    let prefix = Path::new("../../../../llvm-install/bin");
     let call = format!(
         "{} --link-static {}",
         prefix.join("llvm-config").display(),

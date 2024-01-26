@@ -116,7 +116,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         .header("wrapper.hpp")
         .clang_arg(format!("-I{}", llvm_includedir))
         .clang_arg(format!("-I{}", mlir_includedir.display()))
-        // .clang_arg("-std=c++14")
+        .clang_arg("-std=c++17")
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .allowlist_recursively(false)
         .blocklist_type("mlir::DialectRegistry")

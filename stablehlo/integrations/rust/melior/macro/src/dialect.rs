@@ -17,10 +17,18 @@ use quote::quote;
 use std::{env, fmt::Display, path::Path, process::Command, str};
 use tblgen::{record::Record, record_keeper::RecordKeeper, TableGenParser};
 
-const LLVM_MAJOR_VERSION: usize = 17;
+const LLVM_MAJOR_VERSION: usize = 18;
 
 pub fn generate_dialect(input: DialectInput) -> Result<TokenStream, Box<dyn std::error::Error>> {
     let mut parser = TableGenParser::new();
+
+    // spell-checker: disable-next-line
+    let llvm_include_directory = llvm_config("--includedir")?;
+    parser = parser.add_include_path(llvm_include_directory.as_str());
+
+    for path in input.include_directories() {
+        parser = parser.add_include_path(path);
+    }
 
     if let Some(source) = input.table_gen() {
         parser = parser.add_source(source).map_err(create_syn_error)?;
@@ -28,16 +36,6 @@ pub fn generate_dialect(input: DialectInput) -> Result<TokenStream, Box<dyn std:
 
     if let Some(file) = input.td_file() {
         parser = parser.add_source_file(file).map_err(create_syn_error)?;
-    }
-
-    // spell-checker: disable-next-line
-    let llvm_include_directory = llvm_config("--includedir")?;
-
-    for path in input
-        .include_directories()
-        .chain([llvm_include_directory.as_str()])
-    {
-        parser = parser.add_include_path(path);
     }
 
     let keeper = parser.parse().map_err(Error::Parse)?;
@@ -90,9 +88,7 @@ fn generate_dialect_module(
 }
 
 fn llvm_config(argument: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let prefix = env::var(format!("MLIR_SYS_{}0_PREFIX", LLVM_MAJOR_VERSION))
-        .map(|path| Path::new(&path).join("bin"))
-        .unwrap_or_default();
+    let prefix = Path::new("/home/ilias/sources/stablehlo/llvm-install/bin");
     let call = format!(
         "{} --link-static {}",
         prefix.join("llvm-config").display(),

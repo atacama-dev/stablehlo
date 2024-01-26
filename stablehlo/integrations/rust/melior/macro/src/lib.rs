@@ -26,7 +26,6 @@ use syn::parse_macro_input;
 #[proc_macro]
 pub fn dialect(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DialectInput);
-
     convert_result(dialect::generate_dialect(input))
 }
 
